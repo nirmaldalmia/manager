@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
+import { createStore, applyMiddleware } from 'redux';
 import firebase from 'react-native-firebase';
 import reducers from './src/reducers';
+import LoginForm from './src/components/LoginForm';
+import ReduxThunk from 'redux-thunk';
 
 export default class App extends Component {
   componentWillMount = () => {
@@ -16,14 +17,14 @@ export default class App extends Component {
       messagingSenderId: "123708140316"
     };
     firebase.initializeApp(config);
+    console.disableYellowBox = true;
   }
-  
+
   render() {
+    const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
     return (
-      <Provider store={createStore(reducers)}>
-        <View>
-          <Text> textInComponent </Text>
-        </View>
+      <Provider store={store}>
+        <LoginForm />
       </Provider>
     )
   }
